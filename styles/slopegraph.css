@@ -1,0 +1,12 @@
+svg.hovered g:not(.over) {
+    opacity: 0.25;
+}
+
+g.over {
+  opacity: 1;
+  stroke-width: 2;
+  font-weight: bold;
+}
+
+g.over text.label { font-weight: bold; }
+g.over line.slope { stroke-width: 2; }

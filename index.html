@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+	<link rel="stylesheet" href="styles/slopegraph.css" />
+</head>
+<body>
+	<div id="example1">
+		<h2>Example 1:</h2>
+	</div>
+
+	<div id="example2">
+		<h2>Example 2:</h2>
+	</div>
+
+	<script src="scripts/jquery-2.1.0.min.js"></script>
+	<script src="scripts/d3.min.js"></script>
+	<script src="scripts/slopegraph.js"></script>
+
+	<script type="text/javascript">
+		var data = [
+			{
+				'name': 'One',
+				'count': 5,
+				'is_on': false
+			},
+			{
+				'name': 'One',
+				'count': 6,
+				'is_on': true
+			},
+			{
+				'name': 'Two',
+				'count': 5,
+				'is_on': false
+			},
+			{
+				'name': 'Three',
+				'count': 1,
+				'is_on': true
+			}
+		];
+		var data2 = [
+			{
+				'name': 'One',
+				'left': 5,
+				'right': 5
+			}, 
+			{
+				'name': 'Overlap',
+				'left': 5,
+				'right': 5
+			},
+			{
+				'name': 'Two',
+				'left': 2,
+				'right': 10
+			},
+			{
+				'name': 'Three',
+				'left': 3,
+				'right': 8
+			}
+		];
+
+		var svg = d3.select('#example1').append('svg')
+			.attr('width', 400)
+			.attr('height', 600);
+
+		var chart = new SlopeGraph(svg, data, null,
+			{
+				func: function(data) { 
+					var sum = 0; 
+					data.forEach(function(d) { sum += d['count']; }); 
+					console.log('left: ', sum);
+					return sum;
+				},
+				_min: 1
+			},
+			{
+				func: function(data) { 
+					var sum = 0,
+						onSum = 0; 
+					data.forEach(function(d) { 
+						sum += d['count']; 
+						if ( d['is_on'] )
+							onSum += d['count'];
+					}); 
+					console.log('right: ', parseFloat(onSum) / parseFloat(sum));
+					return parseFloat(onSum) / parseFloat(sum);
+				},
+				format: function(value) {
+					return d3.round(value * 100, 0) + '%';
+				}
+			}
+		)
+		.setMeasure('name')
+		.setColorFunc(
+			function(leftValue, rightValue) {
+				if ( rightValue < .5 ) {
+					return 'red';
+				} else {
+					return 'green';
+				}
+			});
+		chart.draw();
+
+		var svg2 = d3.select('#example2').append('svg')
+			.attr('width', 400)
+			.attr('height', 600);
+
+		var chart2 = new SlopeGraph(svg2, data2)
+			.setLeftMeasure('left')
+			.setRightMeasure('right')
+			.setMeasure('name');
+
+		chart2.draw();
+	</script>
+</body>
+</html>
