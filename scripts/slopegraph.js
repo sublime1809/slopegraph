@@ -48,7 +48,15 @@
         this.setRightMeasure = function(measure) {
             graph.rightOptions.measure = measure;
             return graph;
-        }
+        };
+        this.setLeftFunc = function(func) {
+            graph.leftOptions.func = func;
+            return graph;
+        };
+        this.setRightFunc = function(func) {
+            graph.rightOptions.func = func;
+            return graph;
+        };
         this.setLeftRange = function(min, max) {
             graph.leftOptions._min = min;
             graph.leftOptions._max = max;

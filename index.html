@@ -70,26 +70,9 @@
 
 		var chart = new SlopeGraph(svg, data, null,
 			{
-				func: function(data) { 
-					var sum = 0; 
-					data.forEach(function(d) { sum += d['count']; }); 
-					console.log('left: ', sum);
-					return sum;
-				},
 				_min: 1
 			},
 			{
-				func: function(data) { 
-					var sum = 0,
-						onSum = 0; 
-					data.forEach(function(d) { 
-						sum += d['count']; 
-						if ( d['is_on'] )
-							onSum += d['count'];
-					}); 
-					console.log('right: ', parseFloat(onSum) / parseFloat(sum));
-					return parseFloat(onSum) / parseFloat(sum);
-				},
 				format: function(value) {
 					return d3.round(value * 100, 0) + '%';
 				}
@@ -103,6 +86,22 @@
 				} else {
 					return 'green';
 				}
+			})
+		.setLeftFunc(
+			function(data) {
+				var sum = 0; 
+				data.forEach(function(d) { sum += d['count']; });
+				return sum;
+			})
+		.setRightFunc(function(data) {
+				var sum = 0,
+					onSum = 0; 
+				data.forEach(function(d) { 
+					sum += d['count']; 
+					if ( d['is_on'] )
+						onSum += d['count'];
+				}); 
+				return parseFloat(onSum) / parseFloat(sum);
 			});
 		chart.draw();
 
