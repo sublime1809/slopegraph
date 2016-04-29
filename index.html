@@ -68,32 +68,21 @@
 			.attr('width', 400)
 			.attr('height', 600);
 
-		var chart = new SlopeGraph(svg, data, null,
-			{
-				_min: 1
-			},
-			{
-				format: function(value) {
-					return d3.round(value * 100, 0) + '%';
-				}
-			}
-		)
-		.setMeasure('name')
-		.setColorFunc(
-			function(leftValue, rightValue) {
+		var chart = new SlopeGraph(svg, data)
+			.setMeasure('name')
+			.setColorFunc(function(leftValue, rightValue) {
 				if ( rightValue < .5 ) {
 					return 'red';
 				} else {
 					return 'green';
 				}
 			})
-		.setLeftFunc(
-			function(data) {
+			.setLeftFunc(function(data) {
 				var sum = 0; 
 				data.forEach(function(d) { sum += d['count']; });
 				return sum;
 			})
-		.setRightFunc(function(data) {
+			.setRightFunc(function(data) {
 				var sum = 0,
 					onSum = 0; 
 				data.forEach(function(d) { 
@@ -102,6 +91,9 @@
 						onSum += d['count'];
 				}); 
 				return parseFloat(onSum) / parseFloat(sum);
+			})
+			.setRightFormat(function(value) {
+				return d3.round(value * 100, 0) + '%';
 			});
 		chart.draw();
 

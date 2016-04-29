@@ -71,6 +71,14 @@
             graph.options.colorFunc = colorFunc;
             return graph;
         };
+        this.setRightFormat = function(formatFunc) {
+            graph.rightOptions.format = formatFunc;
+            return graph;
+        };
+        this.setLeftFormat = function(formatFunc) {
+            graph.leftOptions.format = formatFunc;
+            return graph;
+        };
         this.draw = function() {
             var points = graph._generatePoints();
 
