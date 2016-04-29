@@ -29,15 +29,17 @@ var data = [
 var graph = new SlopeGraph(svg, data);
 ```
 
-Next define a measure on your data. This is the attribute that will be the label in the end. 
+##### Set Main Measure
+Next define a measure on your data. This is the attribute that will be the label in the end and the aggregating attribute if you are using Option 1 in the next step.
 
 ```javascript
 graph.setMeasure('name');
 ```
 
+##### Set Left and Right Values
 From here, you have two options. Either set functions to define how to aggregate values on your data ( setLeftFunc(...) && setRightFunc(...) )or define the attribute on your data that is to be measured ( setLeftMeasure(...) && setRightMeasure('...') ).
 
-### Option 1
+###### Option 1
 Let's define the left side to be the sum of all the values that have the same name (main measure). The right side will be the difference between the min and max values. This is used when your data is relative to each other based on the main measure.
 
 ```javascript
@@ -60,7 +62,7 @@ graph.setRightFunc(
 );
 ```
 
-### Option 2
+###### Option 2
 Simply define the left measure and right measure. This is useful when your data is already formatted for you.
 
 ```javascript
@@ -68,3 +70,8 @@ graph.setLeftMeasure('left');
 graph.setRightMeasure('right');
 ```
 
+##### DRAW!
+After all that, just draw the graph!
+```javascript
+graph.draw();
+```
