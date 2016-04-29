@@ -75,3 +75,21 @@ After all that, just draw the graph!
 ```javascript
 graph.draw();
 ```
+
+## Additional Options
+To customize the lines on the graph, implement a method that accepts the left and right value and returns either a color string or hex code.
+The following example defines a function that returns red if the left value is less than the right, yellow if they are equal and green if neither.
+
+```javascript
+graph.setColorFunc(
+	function(leftValue, rightValue) {
+		if ( leftValue < rightValue ) {
+			return 'red';
+		} else if ( leftValue == rightValue ) {
+			return '#FFFF00';
+		} else {
+			return 'green';
+		}
+	}
+);
+```
