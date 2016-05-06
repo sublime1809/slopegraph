@@ -15,8 +15,6 @@
         format: function(value) { return value; }
     };
     var defaultOptions = {
-        height: 300,
-        width: 400,
         colorFunc: function(leftValue, rightValue) {
             return '#000';
         },
@@ -24,16 +22,19 @@
         labelStyles: {
             'font-size': '12px'
         },
-        yPadding: 10
+        yPadding: 10,
+        labelLength: 150
     };
-    
+
     var SlopeGraph = function(svg, data, measure, leftOptions, rightOptions, options) {
         this.leftOptions = $.extend({}, defaultAxisOptions, leftOptions);
         this.rightOptions = $.extend({}, defaultAxisOptions, rightOptions);
         this.options = $.extend({}, defaultOptions, options);
-        this.height = this.options.height;
+        this.height = $(svg[0]).height();
+        this.width = $(svg[0]).width();
         this.measure = measure;
         this.data = data;
+        this.labelLength = this.options.labelLength;
 
         var graph = this;
 
@@ -108,7 +109,7 @@
                     .classed("label start", true)
                     .attr("xml:space", "preserve")
                     .style("text-anchor", "end")
-                    .attr("x", 100)
+                    .attr("x", graph.labelLength)
                     .attr("y", 0)
                     .style(graph.options.labelStyles);
 
@@ -124,7 +125,7 @@
                     .append("text")
                     .classed("label end", true)
                     .attr("xml:space", "preserve")
-                    .attr("x", graph.options.width - 100)
+                    .attr("x", graph.width - graph.labelLength - 50)
                     .attr("y", 0)
                     .style(graph.options.labelStyles);
 
@@ -139,8 +140,8 @@
             line
                 .enter()
                     .append('line')
-                    .attr('x1', 100 + 5)
-                    .attr('x2', graph.options.width - 100 - 5)
+                    .attr('x1', graph.labelLength + 5)
+                    .attr('x2', graph.width - graph.labelLength - 55)
                     .attr('opacity', 0)
                     .attr('y1', 0)
                     .attr('y2', 0);
@@ -233,7 +234,6 @@
                     });
                 }
             }
-            console.log(points);
             graph._fixCollisions(points);
             return points;
         };
@@ -244,12 +244,16 @@
 
             points
                 .sort(function(a,b) {
-                    if (a.right == b.right) return 0;
+                    if (a.right == b.right) {
+                        if ( a.left == b.left )
+                            return 0;
+                        return (a.left < b.left) ? -1 : +1
+                    }
                     return (a.right > b.right) ? -1 : +1;
                 })
                 .forEach(function(d) {
                     points.forEach(function(dd) {
-                        if ( d != dd && dd.right >= d.right ) {
+                        if ( d != dd ) {
                             if ( dd.right == d.right ) {
                                 if ( dd.left > d.left) {
                                     dd.right += fontSize - (dd.right - d.right);
@@ -258,8 +262,8 @@
                                     }
                                 }
                             }
-                            if ( dd.right - d.right <= fontSize ) {
-                                dd.right += fontSize - (dd.right - d.right);
+                            if ( Math.abs(dd.right - d.right) <= fontSize ) {
+                                dd.right += fontSize - Math.abs(dd.right - d.right);
                                 if ( dd.right > maxY ) {
                                     maxY = dd.right;
                                 }
@@ -270,7 +274,11 @@
 
             points
                 .sort(function(a,b) {
-                    if (a.left == b.left) return 0;
+                    if (a.left == b.left) {
+                        if ( a.right == b.right )
+                            return 0;
+                        return (a.right < b.right) ? -1 : +1;
+                    }
                     return (a.left < b.left) ? -1 : +1;
                 })
                 .forEach(function(d) {
@@ -294,7 +302,7 @@
                     });
                 });
 
-            if ( maxY > graph.options.height ) {
+            if ( maxY > graph.height ) {
                 graph.height = maxY;
             }
         };
